@@ -48,7 +48,6 @@ void loop() {
 void serialEvent() {
   if(Serial.available()) {
     byteReceived = Serial.read();
-    //byteSent = byteReceived;
   }
 }
 
