@@ -27,27 +27,32 @@ void setup() {
   // fast as possible).  To use continuous timed mode
   // instead, provide a desired inter-measurement period in
   // ms (e.g. sensor.startContinuous(100)).
-  sensor.startContinuous();
+  
+  //sensor.startContinuous();
+
+  sensor.setMeasurementTimingBudget(20000); // modo HIGH SPEED
 
   pinMode(pwmPin, OUTPUT);
 
 }
 
 void loop() {
-  distance = tubeSize -(sensor.readRangeContinuousMillimeters()/10);
-  Serial.write(distance);
+   
+  distance = tubeSize - (sensor.readRangeSingleMillimeters()/10);
+  Serial.write(distance); 
   
-  if (sensor.timeoutOccurred()) { 
+  //if (sensor.timeoutOccurred()) { 
     //Serial.print(" TIMEOUT"); 
-  }
+  //}
 
   //output = map(byteReceived,0,100,deadZone,255);
-  analogWrite(pwmPin, byteReceived);
+  //analogWrite(pwmPin, byteReceived);
 }
 
 void serialEvent() {
   if(Serial.available()) {
     byteReceived = Serial.read();
+    analogWrite(pwmPin, byteReceived);
   }
 }
 
