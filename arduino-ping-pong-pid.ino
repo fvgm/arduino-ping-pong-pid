@@ -1,8 +1,7 @@
-/* This example shows how to use continuous mode to take
-range measurements with the VL53L0X. It is based on
-vl53l0x_ContinuousRanging_Example.c from the VL53L0X API.
-
-The range readings are in units of mm. */
+/* Esse código aguarda o recebimento de um byte via Serial,
+que é a largura do pulso PWM. Após o recebimento deste dado, 
+o código envia o valor da altura do objeto para o PC.
+*/
 
 #include <Wire.h>
 #include <VL53L0X.h>
@@ -13,44 +12,34 @@ int tubeSize = 102;
 
 int byteReceived = 0;
 int pwmPin = 9;
-//int deadZone = 55;
-//int output = 0;
 
 void setup() {
   Serial.begin(9600);
+  while(!Serial) {};
+  
   Wire.begin();
 
   sensor.init();
   sensor.setTimeout(500);
 
-  // Start continuous back-to-back mode (take readings as
-  // fast as possible).  To use continuous timed mode
-  // instead, provide a desired inter-measurement period in
-  // ms (e.g. sensor.startContinuous(100)).
-  
-  sensor.startContinuous(50);
+  //sensor.startContinuous(50);
 
-  //sensor.setMeasurementTimingBudget(25000); // modo HIGH SPEED
+  sensor.setMeasurementTimingBudget(20000); // modo HIGH SPEED
 
   pinMode(pwmPin, OUTPUT);
+
+  Serial.write(0); // estabelece o contato
 
 }
 
 void loop() {
-   
-  distance = tubeSize - (sensor.readRangeContinuousMillimeters()/10);
-  Serial.write(distance); 
-  
-  //if (sensor.timeoutOccurred()) { 
-    //Serial.println(" TIMEOUT"); 
-  //}
-
-}
-
-void serialEvent() {
-  if(Serial.available()) {
+  if (Serial.available() > 0) {
     byteReceived = Serial.read();
+    
+    distance = tubeSize - (sensor.readRangeSingleMillimeters()/10);  
+    Serial.write(distance);
     analogWrite(pwmPin, byteReceived);
   }
 }
+
 
