@@ -9,7 +9,7 @@ The range readings are in units of mm. */
 
 VL53L0X sensor;
 int distance = 0;
-int tubeSize = 101;
+int tubeSize = 102;
 
 int byteReceived = 0;
 int pwmPin = 9;
@@ -28,9 +28,9 @@ void setup() {
   // instead, provide a desired inter-measurement period in
   // ms (e.g. sensor.startContinuous(100)).
   
-  //sensor.startContinuous();
+  sensor.startContinuous(50);
 
-  sensor.setMeasurementTimingBudget(20000); // modo HIGH SPEED
+  //sensor.setMeasurementTimingBudget(25000); // modo HIGH SPEED
 
   pinMode(pwmPin, OUTPUT);
 
@@ -38,15 +38,13 @@ void setup() {
 
 void loop() {
    
-  distance = tubeSize - (sensor.readRangeSingleMillimeters()/10);
+  distance = tubeSize - (sensor.readRangeContinuousMillimeters()/10);
   Serial.write(distance); 
   
   //if (sensor.timeoutOccurred()) { 
-    //Serial.print(" TIMEOUT"); 
+    //Serial.println(" TIMEOUT"); 
   //}
 
-  //output = map(byteReceived,0,100,deadZone,255);
-  //analogWrite(pwmPin, byteReceived);
 }
 
 void serialEvent() {
