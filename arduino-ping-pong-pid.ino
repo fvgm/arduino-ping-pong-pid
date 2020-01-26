@@ -8,7 +8,7 @@ o código envia o valor da altura do objeto para o PC.
 
 VL53L0X sensor;
 int distance = 0;
-int tubeSize = 102;
+int tubeSize = 103;
 
 int byteReceived = 0;
 int pwmPin = 9;
